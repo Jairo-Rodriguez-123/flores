@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para ti 🌻</title>
+    
+    <style>
+        :root {
+            --bg-color: #f4f1ea;
+            --text-color: #5c4a3d;
+            --btn-color: #85c1e9;
+            --btn-hover: #5dade2;
+            --pot-color: #d35400;
+            --pot-shadow: #a04000;
+            --stem-color: #27ae60;
+            --flower-color: #f1c40f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* Evitar selecciones accidentales en celular */
+            user-select: none; 
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--text-color);
+            text-align: center;
+            padding: 40px 20px;
+            overflow: hidden; /* Evita scroll indeseado */
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #4a4a4a;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        #lista-mensajes {
+            font-size: 1.3rem;
+            font-weight: 500;
+            height: 120px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .mensaje-item {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(255, 255, 255, 0.6);
+            padding: 10px 25px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .mensaje-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .svg-container {
+            width: 100%;
+            max-width: 300px;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+        }
+
+        /* Estados iniciales (Ocultos) */
+        #stem {
+            transform: scaleY(0);
+            transform-origin: 100px 180px;
+            transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #leaves {
+            transform: scale(0);
+            transform-origin: 100px 130px;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        #flower {
+            transform: scale(0) rotate(-45deg);
+            transform-origin: 100px 60px;
+            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Estados de crecimiento */
+        #stem.grown { transform: scaleY(1); }
+        #leaves.grown { transform: scale(1); }
+        #flower.grown { transform: scale(1) rotate(0deg); }
+
+        @keyframes sway {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .sway-animation {
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        .boton-regar {
+            background-color: var(--btn-color);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 8px 15px rgba(133, 193, 233, 0.4);
+            transition: all 0.2s ease;
+            margin-top: 20px;
+            -webkit-tap-highlight-color: transparent; /* Quita sombra azul en Android */
+            touch-action: manipulation;
+        }
+
+        .boton-regar:active {
+            transform: translateY(4px) scale(0.96);
+            box-shadow: 0 4px 8px rgba(133, 193, 233, 0.3);
+        }
+
+        .boton-regar:disabled {
+            background-color: var(--flower-color);
+            color: #8c7314;
+            box-shadow: 0 8px 15px rgba(241, 196, 15, 0.3);
+            cursor: default;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Te amo porque:</h1>
+    </header>
+    
+    <div id="lista-mensajes">
+        <!-- Los mensajes se irán agregando aquí dinámicamente -->
+    </div>
+
+    <div class="svg-container">
+        <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+            
+            <g id="plant-group">
+                <!-- Tallo -->
+                <path id="stem" d="M 100 180 Q 90 120 100 70" fill="none" stroke="var(--stem-color)" stroke-width="8" stroke-linecap="round"/>
+                
+                <!-- Hojas -->
+                <g id="leaves">
+                    <path d="M 98 140 Q 60 145 50 110 Q 70 110 98 125" fill="var(--stem-color)"/>
+                    <path d="M 102 120 Q 140 115 150 80 Q 130 80 102 105" fill="var(--stem-color)"/>
+                </g>
+                
+                <!-- Flor Amarilla -->
+                <g id="flower">
+                    <!-- Pétalos -->
+                    <circle cx="100" cy="35" r="18" fill="var(--flower-color)"/>
+                    <circle cx="100" cy="85" r="18" fill="var(--flower-color)"/>
+                    <circle cx="75" cy="60" r="18" fill="var(--flower-color)"/>
+                    <circle cx="125" cy="60" r="18" fill="var(--flower-color)"/>
+                    <circle cx="82" cy="42" r="18" fill="var(--flower-color)"/>
+                    <circle cx="118" cy="42" r="18" fill="var(--flower-color)"/>
+                    <circle cx="82" cy="78" r="18" fill="var(--flower-color)"/>
+                    <circle cx="118" cy="78" r="18" fill="var(--flower-color)"/>
+                    
+                    <!-- Centro -->
+                    <circle cx="100" cy="60" r="14" fill="#d35400"/>
+                    <circle cx="100" cy="60" r="10" fill="#a04000"/>
+                </g>
+            </g>
+
+            <!-- Maceta (Siempre visible) -->
+            <g id="pot">
+                <ellipse cx="100" cy="180" rx="35" ry="8" fill="#5C4033"/>
+                <path d="M 65 190 L 75 240 Q 100 250 125 240 L 135 190 Z" fill="var(--pot-color)"/>
+                <path d="M 75 240 Q 100 250 125 240 L 125 235 Q 100 245 75 235 Z" fill="var(--pot-shadow)"/>
+                <rect x="60" y="175" width="80" height="15" rx="5" fill="var(--pot-color)"/>
+                <rect x="60" y="185" width="80" height="5" rx="2" fill="var(--pot-shadow)"/>
+            </g>
+        </svg>
+    </div>
+
+    <button class="boton-regar" id="btnRegar">💧 Regar</button>
+
+    <script>
+        // Arreglo de razones (sin errores de comillas ni comas)
+        const razones = [
+            "Me impulsas cada dia a ser mejor",
+            "Eres mi vida entera ",
+            "Eres con quien quiero estar toda la vida 💛"
+        ];
+
+        let pasoActual = 0;
+
+        // Referencias a los elementos del DOM
+        const btnRegar = document.getElementById('btnRegar');
+        const listaMensajes = document.getElementById('lista-mensajes');
+        
+        const stem = document.getElementById('stem');
+        const leaves = document.getElementById('leaves');
+        const flower = document.getElementById('flower');
+        const plantGroup = document.getElementById('plant-group');
+
+        // Función principal que se ejecuta al regar
+        function regarPlanta() {
+            if (pasoActual < razones.length) {
+                
+                // 1. Crear y mostrar el texto con animación
+                const nuevoMensaje = document.createElement('div');
+                nuevoMensaje.classList.add('mensaje-item');
+                nuevoMensaje.textContent = razones[pasoActual];
+                listaMensajes.appendChild(nuevoMensaje);
+                
+                // Forzar el repintado antes de añadir la clase 'visible'
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        nuevoMensaje.classList.add('visible');
+                    });
+                });
+
+                // 2. Controlar el crecimiento de la planta por etapas
+                if (pasoActual === 0) {
+                    stem.classList.add('grown');
+                } 
+                else if (pasoActual === 1) {
+                    leaves.classList.add('grown');
+                } 
+                else if (pasoActual === 2) {
+                    flower.classList.add('grown');
+                    // Iniciar animación suave al terminar de crecer
+                    setTimeout(() => {
+                        plantGroup.classList.add('sway-animation');
+                    }, 1200);
+                }
+
+                pasoActual++;
+
+                // 3. Modificar el botón cuando termina
+                if (pasoActual === razones.length) {
+                    btnRegar.textContent = "Te amo Amorchis";
+                    btnRegar.disabled = true;
+                }
+            }
+        }
+
+        // Listener optimizado para móviles (click funciona perfecto con la propiedad touch-action en CSS)
+        btnRegar.addEventListener('click', regarPlanta);
+
+    </script>
+</body>
+</html>
